@@ -28,11 +28,11 @@ const routeHandler = (req, res) => {
 
     return req.on('end', () => {
       console.log({ body });
-      fs.writeFile('data.txt', body, (err) => {
+      fs.writeFile('message.txt', body, (err) => {
         if (err) {
           throw Error();
         }
-        console.log('data.txt has been saved');
+        console.log('File message.txt has been created.');
         res.statusCode = 302;
         res.setHeader('Location', '/');
         return res.end();

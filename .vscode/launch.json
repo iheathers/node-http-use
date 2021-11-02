@@ -9,7 +9,13 @@
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/app.js"
+      "program": "${workspaceFolder}/app.js",
+      // Auto Restart Debugger on file Change
+      // nodemon should be installed globally
+      // Also integrated console should be used so that they both listen to same port or something like that
+      "restart": true,
+      "runtimeExecutable": "nodemon",
+      "console": "integratedTerminal"
     }
   ]
 }

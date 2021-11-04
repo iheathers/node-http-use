@@ -1,15 +1,30 @@
-// CORE IMPORTS AT TOP
-const http = require('http');
-
-// THIRD PARTY IMPORTS AT SECOND
 const express = require('express');
-
-// LOCAL IMPORTS
-
-// const { routeHandler } = require('./routes');
 
 const app = express();
 
-const server = http.createServer(app);
+app.use(express.urlencoded({ extended: true }));
 
-server.listen(5000);
+app.use('/add-product', (req, res, next) => {
+  console.log('Route /add-product');
+
+  console.log('Request: ', req.body);
+
+  res.send(`
+  <form action="/product" method="POST">
+  <input name='title' type='text'/>
+  <button type="submit">Submit</button>
+  </form>
+  `);
+});
+
+app.use('/product', (req, res, next) => {
+  console.log('Reqest in /product', req.body);
+
+  res.send('Route /product');
+});
+
+app.use('/', (req, res, next) => {
+  res.send('route / ');
+});
+
+app.listen(4000);

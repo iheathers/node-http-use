@@ -1,9 +1,15 @@
+// CORE IMPORTS AT TOP
 const http = require('http');
 
-const { routeHandler } = require('./routes');
+// THIRD PARTY IMPORTS AT SECOND
+const express = require('express');
 
-console.log({ routeHandler });
+// LOCAL IMPORTS
 
-const server = http.createServer(routeHandler);
+// const { routeHandler } = require('./routes');
+
+const app = express();
+
+const server = http.createServer(app);
 
 server.listen(5000);

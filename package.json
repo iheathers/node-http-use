@@ -19,5 +19,8 @@
   "homepage": "https://github.com/iheathers/node-http-use#readme",
   "devDependencies": {
     "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }

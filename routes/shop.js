@@ -7,8 +7,12 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   console.log('Request to /', 'GET', products);
   console.log({ products });
-  // res.sendFile(path.join(path.join(rootDir, 'views', 'shop.html')));
-  res.render('shop', { title: 'My dynamic shop', products });
+  res.render('shop', {
+    title: 'My dynamic shop',
+    products,
+    pageTitle: 'Shop',
+    path: '/',
+  });
 });
 
 module.exports = router;

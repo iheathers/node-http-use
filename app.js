@@ -6,6 +6,10 @@ const { adminRouter } = require('./routes/admin');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', 'views');
+console.log(app.get('view engine'));
+
 app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));

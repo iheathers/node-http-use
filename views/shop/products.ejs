@@ -9,15 +9,15 @@
   </head>
 
   <body>
-    <%- include('partials/header.ejs') %>
+    <%- include('../partials/header.ejs') %>
 
     <main>
       <h1>My Products</h1>
       <% if (products.length > 0) { %>
 
       <div class="grid">
-        <% products.forEach((product) => { %> <%- include('partials/card.ejs',
-        {title: product.title }) %> <% }) %>
+        <% products.forEach((product) => { %> <%-
+        include('../partials/card.ejs', {title: product.title }) %> <% }) %>
       </div>
       <%} else { %>
       <p>No Products</p>

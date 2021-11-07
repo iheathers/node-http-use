@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = require('../utils/path');
-console.log({ rootDir });
 
 const filePath = path.join(rootDir, 'data', 'products.json');
 
@@ -12,8 +11,6 @@ class Product {
   }
 
   save() {
-    console.log('Saving product...');
-
     fs.readFile(filePath, (err, data) => {
       let products = [];
 
@@ -35,7 +32,6 @@ class Product {
       try {
         fs.readFile(filePath, (err, data) => {
           if (data) {
-            console.log({ data });
             resolve(JSON.parse(data));
           }
           resolve([]);

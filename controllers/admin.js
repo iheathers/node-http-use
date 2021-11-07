@@ -1,3 +1,5 @@
+const { Product } = require('../models/product');
+
 const getProducts = (req, res, next) => {
   res.render('admin/product-list', {
     pageTitle: 'Admin Products',

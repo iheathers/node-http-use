@@ -1,4 +1,4 @@
-const products = [];
+const { Product } = require('../models/product');
 
 const getAddProduct = (req, res, next) => {
   console.log('Route /add-product', 'GET', req.body);
@@ -12,12 +12,18 @@ const getAddProduct = (req, res, next) => {
 const postAddProduct = (req, res, next) => {
   console.log('Route /add-product', 'POST', req.body);
 
-  products.push(req.body);
+  const title = req.body.title;
+  const product = new Product(title);
+  product.save();
+
   res.redirect('/');
 };
 
-const getProducts = (req, res, next) => {
+const getProducts = async (req, res, next) => {
   console.log('Route /', 'GET', req.body);
+
+  const products = await Product.fetchAll();
+  console.log('fetchall', { products });
 
   res.render('shop', {
     pageTitle: 'Shop',

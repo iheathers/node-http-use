@@ -2,6 +2,7 @@ const express = require('express');
 
 const userRoutes = require('./routes/shop');
 const { adminRouter } = require('./routes/admin');
+const { getErrorPage } = require('./controllers/error');
 
 const app = express();
 
@@ -14,8 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/admin', adminRouter);
 app.use(userRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).render('404', { pageTitle: 'Error 404' });
-});
+app.use(getErrorPage);
 
 app.listen(4000);

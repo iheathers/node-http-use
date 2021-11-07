@@ -1,22 +1,11 @@
 const express = require('express');
 
-const ehbs = require('express-handlebars');
-
 const userRoutes = require('./routes/shop');
 const { adminRouter } = require('./routes/admin');
 
 const app = express();
 
-app.engine(
-  'hbs',
-  ehbs({
-    layoutsDir: 'views/layouts',
-    defaultLayout: 'main-layout',
-    extname: 'hbs',
-  })
-);
-
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(express.static('public'));

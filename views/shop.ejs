@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+
+  <body>
+    <%- include('partials/header.ejs') %>
+
+    <main>
+      <h1>My Products</h1>
+      <% if (products.length > 0) { %>
+
+      <div class="grid">
+        <% products.forEach((product) => { %> <%- include('partials/card.ejs',
+        {title: product.title }) %> <% }) %>
+      </div>
+      <%} else { %>
+      <p>No Products</p>
+      <% } %>
+    </main>
+  </body>
+</html>

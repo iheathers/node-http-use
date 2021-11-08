@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Products</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/card.css" />
+  </head>
+  <body>
+    <%- include('../partials/navigation.ejs') %>
+    <main>
+      <h1>Admin Products</h1>
+      <% if (products.length > 0) { %>
+
+      <div class="grid">
+        <% products.forEach((product) => { %> <%-
+        include('../partials/admin-card.ejs', {title: product.title, price:
+        product.price, description: product.description, imageURL:
+        product.imageURL }) %> <% }) %>
+      </div>
+      <%} else { %>
+      <p>No Products</p>
+      <% } %>
+    </main>
+  </body>
+</html>

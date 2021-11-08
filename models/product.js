@@ -6,8 +6,11 @@ const rootDir = require('../utils/path');
 const filePath = path.join(rootDir, 'data', 'products.json');
 
 class Product {
-  constructor(title) {
+  constructor(title, price, imageURL, description) {
     this.title = title;
+    this.price = price;
+    this.imageURL = imageURL;
+    this.description = description;
   }
 
   save() {

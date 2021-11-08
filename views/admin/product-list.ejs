@@ -10,6 +10,19 @@
   </head>
   <body>
     <%- include('../partials/navigation.ejs') %>
-    <h1>Admin Products</h1>
+    <main>
+      <h1>Admin Products</h1>
+      <% if (products.length > 0) { %>
+
+      <div class="grid">
+        <% products.forEach((product) => { %> <%-
+        include('../partials/admin-card.ejs', {title: product.title, price:
+        product.price, description: product.description, imageURL:
+        product.imageURL }) %> <% }) %>
+      </div>
+      <%} else { %>
+      <p>No Products</p>
+      <% } %>
+    </main>
   </body>
 </html>

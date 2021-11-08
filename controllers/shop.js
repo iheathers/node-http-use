@@ -10,6 +10,13 @@ const getProducts = async (req, res, next) => {
   });
 };
 
+const getOrders = (req, res, next) => {
+  res.render('shop/orders', {
+    pageTitle: 'Orders',
+    path: '/orders',
+  });
+};
+
 const getHomePage = (req, res, next) => {
   res.render('shop/index', {
     pageTitle: 'Digital Shop',
@@ -26,6 +33,7 @@ const getCart = (req, res, next) => {
 
 module.exports = {
   getCart,
+  getOrders,
   getProducts,
   getHomePage,
 };

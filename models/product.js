@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 const rootDir = require('../utils/path');
 
@@ -11,6 +12,7 @@ class Product {
     this.price = price;
     this.imageURL = imageURL;
     this.description = description;
+    this.id = uuidv4();
   }
 
   save() {
@@ -29,6 +31,30 @@ class Product {
       });
     });
   }
+
+  static fetchProductWithId = (id) => {
+    return new Promise((resolve, reject) => {
+      try {
+        fs.readFile(filePath, (err, data) => {
+          if (data) {
+            const products = JSON.parse(data);
+            const product = products.find((product) => product.id === id);
+
+            resolve(product);
+          }
+          resolve({
+            id: null,
+            title: 'null',
+            price: null,
+            description: null,
+            imageURL: null,
+          });
+        });
+      } catch {
+        reject(err);
+      }
+    });
+  };
 
   static async fetchAll() {
     return new Promise((resolve, reject) => {

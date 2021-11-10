@@ -10,6 +10,18 @@ const getProducts = async (req, res, next) => {
   });
 };
 
+const getProductDetail = async (req, res, next) => {
+  const productID = req.params.id;
+
+  const product = await Product.fetchProductWithId(productID);
+
+  res.render('shop/product-detail', {
+    pageTitle: 'Product Detail',
+    path: '/products',
+    product: product,
+  });
+};
+
 const getOrders = (req, res, next) => {
   res.render('shop/orders', {
     pageTitle: 'Orders',
@@ -36,4 +48,5 @@ module.exports = {
   getOrders,
   getProducts,
   getHomePage,
+  getProductDetail,
 };

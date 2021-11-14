@@ -32,7 +32,7 @@ class Product {
     });
   }
 
-  static fetchProductWithId = (id) => {
+  static async fetchProductWithId(id) {
     return new Promise((resolve, reject) => {
       try {
         fs.readFile(filePath, (err, data) => {
@@ -54,7 +54,7 @@ class Product {
         reject(err);
       }
     });
-  };
+  }
 
   static async fetchAll() {
     return new Promise((resolve, reject) => {

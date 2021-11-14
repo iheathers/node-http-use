@@ -22,7 +22,7 @@ const postAddProduct = (req, res, next) => {
   const product = new Product(title, price, imageURL, description);
   product.save();
 
-  res.redirect(301, '/');
+  res.redirect(301, '/products');
 };
 
 module.exports = {

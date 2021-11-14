@@ -17,7 +17,7 @@ const getProductDetail = async (req, res, next) => {
 
   res.render('shop/product-detail', {
     pageTitle: 'Product Detail',
-    path: '/products',
+    path: '/products-detail',
     product: product,
   });
 };
@@ -43,10 +43,20 @@ const getCart = (req, res, next) => {
   });
 };
 
+const postCart = (req, res, next) => {
+  const productID = req.body.productID;
+
+  console.log({ productID });
+
+  res.redirect('/cart');
+};
+
 module.exports = {
   getCart,
   getOrders,
   getProducts,
   getHomePage,
   getProductDetail,
+
+  postCart,
 };

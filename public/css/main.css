@@ -150,3 +150,11 @@ form {
     display: none;
   }
 }
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
+}

@@ -1,3 +1,4 @@
+const { Cart } = require('../models/cart');
 const { Product } = require('../models/product');
 
 const getProducts = async (req, res, next) => {
@@ -43,10 +44,12 @@ const getCart = (req, res, next) => {
   });
 };
 
-const postCart = (req, res, next) => {
-  const productID = req.body.productID;
+const postCart = async (req, res, next) => {
+  const productID = req.body.productID.trim();
 
-  console.log({ productID });
+  const product = await Product.fetchProductWithId(productID);
+
+  Cart.addProduct(productID, product?.price);
 
   res.redirect('/cart');
 };

@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/express-handlebars": "^5.3.1",
+    "@types/node": "^16.11.7",
     "@types/uuid": "^8.3.1"
   },
   "dependencies": {

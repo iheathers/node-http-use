@@ -20,7 +20,8 @@ const getAddProduct = (req, res, next) => {
 
 const postAddProduct = (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
-  const product = new Product(title, price, imageURL, description);
+  const productID = req.body.id.trim();
+  const product = new Product(productID, title, price, imageURL, description);
   product.save();
 
   res.redirect(301, '/products');
@@ -49,9 +50,20 @@ const getEditProduct = async (req, res, next) => {
   });
 };
 
+const postEditProduct = (req, res, next) => {
+  const { id, title, price, description, imageURL } = req.body;
+  const productID = id.trim();
+
+  const product = new Product(productID, title, price, imageURL, description);
+  product.save();
+
+  res.redirect(301, '/products');
+};
+
 module.exports = {
   getProducts,
   getAddProduct,
   postAddProduct,
   getEditProduct,
+  postEditProduct,
 };

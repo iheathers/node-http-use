@@ -7,29 +7,31 @@ const rootDir = require('../utils/path');
 const filePath = path.join(rootDir, 'data', 'products.json');
 
 class Product {
-  constructor(title, price, imageURL, description) {
+  constructor(id, title, price, imageURL, description) {
+    this.id = id;
     this.title = title;
     this.price = price;
     this.imageURL = imageURL;
     this.description = description;
-    this.id = uuidv4();
   }
 
   save() {
     fs.readFile(filePath, (err, data) => {
       let products = [];
 
-      if (!err) {
+      if (!err && data.length > 0) {
         products = JSON.parse(data);
       }
 
-      products.push(this);
+      if (this.id) {
+        const productIndex = products.findIndex((item) => item.id === this.id);
+        products[productIndex] = this;
+      } else {
+        this.id = uuidv4();
+        products.push(this);
+      }
 
-      fs.writeFile(filePath, JSON.stringify(products), (err) => {
-        if (err) {
-          console.log({ err });
-        }
-      });
+      fs.writeFileSync(filePath, JSON.stringify(products));
     });
   }
 
@@ -61,7 +63,7 @@ class Product {
     return new Promise((resolve, reject) => {
       try {
         fs.readFile(filePath, (err, data) => {
-          if (data) {
+          if (data.length > 0) {
             resolve(JSON.parse(data));
           }
           resolve([]);

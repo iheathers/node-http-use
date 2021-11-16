@@ -24,6 +24,7 @@ class Product {
       }
 
       products.push(this);
+
       fs.writeFile(filePath, JSON.stringify(products), (err) => {
         if (err) {
           console.log({ err });
@@ -32,20 +33,20 @@ class Product {
     });
   }
 
-  static fetchProductWithId = (id) => {
+  static async fetchProductWithId(id) {
     return new Promise((resolve, reject) => {
       try {
         fs.readFile(filePath, (err, data) => {
           if (data) {
             const products = JSON.parse(data);
-            const product = products.find((product) => product.id === id);
+            const product = products.find((item) => item.id === id);
 
             resolve(product);
           }
           resolve({
             id: null,
             title: 'null',
-            price: null,
+            price: 0,
             description: null,
             imageURL: null,
           });
@@ -54,7 +55,7 @@ class Product {
         reject(err);
       }
     });
-  };
+  }
 
   static async fetchAll() {
     return new Promise((resolve, reject) => {

@@ -2,12 +2,12 @@ const express = require('express');
 
 const {
   getCart,
+  postCart,
   getOrders,
   getProducts,
   getHomePage,
+  deleteCartItem,
   getProductDetail,
-
-  postCart,
 } = require('../controllers/shop');
 
 const router = express.Router();
@@ -19,5 +19,6 @@ router.get('/products', getProducts);
 router.get('/products/:id', getProductDetail);
 
 router.post('/cart', postCart);
+router.post('/delete-cart-item', deleteCartItem);
 
 module.exports = router;

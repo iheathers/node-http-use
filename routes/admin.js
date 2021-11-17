@@ -2,10 +2,10 @@ const express = require('express');
 const {
   getProducts,
   getAddProduct,
+  deleteProduct,
   postAddProduct,
   getEditProduct,
   postEditProduct,
-  deleteProduct,
 } = require('../controllers/admin');
 
 const adminRouter = express.Router();

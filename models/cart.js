@@ -47,6 +47,23 @@ class Cart {
       fs.writeFileSync(filePath, JSON.stringify(cart));
     });
   }
+
+  static async fetchCart() {
+    return new Promise((resolve, reject) => {
+      try {
+        fs.readFile(filePath, (err, data) => {
+          if (err) {
+            reject(err);
+          }
+
+          const cart = JSON.parse(data);
+          resolve(cart);
+        });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
 }
 
 module.exports = { Cart };

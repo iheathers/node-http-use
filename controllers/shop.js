@@ -61,7 +61,6 @@ const getCart = async (req, res, next) => {
 
 const postCart = async (req, res, next) => {
   const productID = req.body.productID.trim();
-
   const product = await Product.fetchProductWithId(productID);
 
   Cart.addProduct(productID, product?.price);
@@ -69,12 +68,21 @@ const postCart = async (req, res, next) => {
   res.redirect('/cart');
 };
 
+const deleteCartItem = async (req, res, next) => {
+  const productID = req.body.productID.trim();
+  const productPrice = +req.body.productPrice.trim();
+
+  Cart.deleteProductFromCart(productID, productPrice);
+
+  res.redirect('/cart');
+};
+
 module.exports = {
   getCart,
+  postCart,
   getOrders,
   getProducts,
   getHomePage,
+  deleteCartItem,
   getProductDetail,
-
-  postCart,
 };

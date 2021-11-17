@@ -22,6 +22,19 @@
         </p>
       </div>
     </div>
+    <form action="/delete-cart-item" method="POST">
+      <input
+        type="hidden"
+        name="productID"
+        value="<%= cartItem.product.id %> "
+      />
+      <input
+        type="hidden"
+        name="productPrice"
+        value="<%= cartItem.product.price %> "
+      />
+      <button>Delete</button>
+    </form>
     <hr />
     <% }) %>
     <p>Total Price: <%= totalPrice %></p>

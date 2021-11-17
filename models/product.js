@@ -35,6 +35,21 @@ class Product {
     });
   }
 
+  static deleteProductWithId(id) {
+    fs.readFile(filePath, (err, data) => {
+      let products = [];
+
+      if (!err && data.length > 0) {
+        products = JSON.parse(data);
+      }
+
+      const productIndex = products.findIndex((item) => item.id === id);
+      products.splice(productIndex, 1);
+
+      fs.writeFileSync(filePath, JSON.stringify(products));
+    });
+  }
+
   static async fetchProductWithId(id) {
     return new Promise((resolve, reject) => {
       try {

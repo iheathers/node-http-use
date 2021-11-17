@@ -1,3 +1,4 @@
+const { Cart } = require('../models/cart');
 const { Product } = require('../models/product');
 
 const getProducts = async (req, res, next) => {
@@ -60,10 +61,22 @@ const postEditProduct = (req, res, next) => {
   res.redirect(301, '/products');
 };
 
+const deleteProduct = async (req, res, next) => {
+  const productID = req.params.productID;
+
+  const product = await Product.fetchProductWithId(productID);
+
+  Cart.deleteProductFromCart(productID, product.price);
+  Product.deleteProductWithId(productID);
+
+  res.redirect(301, '/products');
+};
+
 module.exports = {
   getProducts,
   getAddProduct,
   postAddProduct,
+  deleteProduct,
   getEditProduct,
   postEditProduct,
 };

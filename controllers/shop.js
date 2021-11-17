@@ -37,10 +37,25 @@ const getHomePage = (req, res, next) => {
   });
 };
 
-const getCart = (req, res, next) => {
+const getCart = async (req, res, next) => {
+  const cartItems = [];
+
+  const cart = await Cart.fetchCart();
+
+  for (const item of cart.items) {
+    const product = await Product.fetchProductWithId(item.id);
+
+    cartItems.push({
+      product: product,
+      quantity: item.quantity,
+    });
+  }
+
   res.render('shop/cart', {
     pageTitle: 'Your Cart',
     path: '/cart',
+    cart: cartItems,
+    totalPrice: cart.totalPrice,
   });
 };
 

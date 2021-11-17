@@ -10,6 +10,22 @@
   <body>
     <%- include('../partials/navigation.ejs') %>
     <h1>Cart</h1>
+    <% if (cart.length === 0) { %>
+    <p>Your cart is empty.</p>
+    <% } else { %> <% cart.forEach((cartItem) => { %>
+    <div class="cart-item">
+      <div class="cart-item-details">
+        <p>Id: <%= cartItem.product.id %></p>
+        <p>Title: <%= cartItem.product.title %></p>
+        <p>
+          Quantity: <%= cartItem.quantity %> * <%= cartItem.product.price %>
+        </p>
+      </div>
+    </div>
+    <hr />
+    <% }) %>
+    <p>Total Price: <%= totalPrice %></p>
+    <% } %>
   </body>
 
   <%- include('../partials/script.ejs') %>

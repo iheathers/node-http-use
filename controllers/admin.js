@@ -19,11 +19,11 @@ const getAddProduct = (req, res, next) => {
   });
 };
 
-const postAddProduct = (req, res, next) => {
+const postAddProduct = async (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
   const productID = req.body.id.trim();
   const product = new Product(productID, title, price, imageURL, description);
-  product.save();
+  await product.save();
 
   res.redirect(301, '/products');
 };

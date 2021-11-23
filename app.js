@@ -1,13 +1,14 @@
 const express = require('express');
 
+const { User } = require('./models/user');
+const { Product } = require('./models/product');
+
 const userRoutes = require('./routes/shop');
 const { adminRouter } = require('./routes/admin');
 
 const { sequelize } = require('./utils/database');
-const { getErrorPage } = require('./controllers/error');
 
-const { User } = require('./models/user');
-const { Product } = require('./models/product');
+const { getErrorPage } = require('./controllers/error');
 
 const app = express();
 

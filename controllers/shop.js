@@ -3,7 +3,7 @@ const { Product } = require('../models/product');
 
 const getProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await req.user.getProducts();
 
     res.render('shop/product-list', {
       pageTitle: 'Shop Products',
@@ -18,12 +18,16 @@ const getProducts = async (req, res, next) => {
 const getProductDetail = async (req, res, next) => {
   const productID = req.params.id;
 
-  const product = await Product.findByPk(productID);
+  const products = await req.user.getProducts({
+    where: {
+      id: productID,
+    },
+  });
 
   res.render('shop/product-detail', {
     pageTitle: 'Product Detail',
     path: '/products-detail',
-    product: product,
+    product: products[0],
   });
 };
 

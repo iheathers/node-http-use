@@ -3,7 +3,7 @@ const { Product } = require('../models/product');
 
 const getProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await req.user.getProducts();
 
     res.render('admin/product-list', {
       pageTitle: 'Admin Products',
@@ -26,11 +26,11 @@ const getAddProduct = (req, res, next) => {
 const postAddProduct = async (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
 
-  await Product.create({
+  await req.user.createProduct({
     title: title,
     price: price,
-    imageURL: imageURL,
     description: description,
+    imageURL: imageURL,
   });
 
   res.redirect(301, '/products');
@@ -45,16 +45,20 @@ const getEditProduct = async (req, res, next) => {
 
   const productID = req.params.productID;
 
-  const product = await Product.findByPk(productID);
+  const products = await req.user.getProducts({
+    where: {
+      id: productID,
+    },
+  });
 
-  // if (!product) {
-  //   res.redirect(301, '/products');
-  // }
+  if (products.length === 0) {
+    res.redirect(301, '/products');
+  }
 
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/edit-product',
-    product: product,
+    product: products[0],
     editing: editMode,
   });
 };

@@ -47,7 +47,7 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     return User.findByPk(1);
   })

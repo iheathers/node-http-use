@@ -15,29 +15,21 @@
     <% } else { %> <% cart.forEach((cartItem) => { %>
     <div class="cart-item">
       <div class="cart-item-details">
-        <p>Id: <%= cartItem.product.id %></p>
-        <p>Title: <%= cartItem.product.title %></p>
+        <p>Id: <%= cartItem.id %></p>
+        <p>Title: <%= cartItem.title %></p>
         <p>
-          Quantity: <%= cartItem.quantity %> * <%= cartItem.product.price %>
+          Quantity: <%= cartItem.CartItem.quantity %> * <%= cartItem.price %>
         </p>
       </div>
     </div>
     <form action="/delete-cart-item" method="POST">
-      <input
-        type="hidden"
-        name="productID"
-        value="<%= cartItem.product.id %> "
-      />
-      <input
-        type="hidden"
-        name="productPrice"
-        value="<%= cartItem.product.price %> "
-      />
+      <input type="hidden" name="productID" value="<%= cartItem.id %> " />
+      <input type="hidden" name="productPrice" value="<%= cartItem.price %> " />
       <button>Delete</button>
     </form>
     <hr />
     <% }) %>
-    <p>Total Price: <%= totalPrice %></p>
+    <p>Total Price: Calculation needed</p>
     <% } %>
   </body>
 

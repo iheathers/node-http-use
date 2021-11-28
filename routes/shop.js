@@ -3,6 +3,7 @@ const express = require('express');
 const {
   getCart,
   postCart,
+  postOrder,
   getOrders,
   getProducts,
   getHomePage,
@@ -13,11 +14,14 @@ const {
 const router = express.Router();
 
 router.get('/', getHomePage);
-router.get('/cart', getCart);
+
 router.get('/orders', getOrders);
+router.post('/orders', postOrder);
+
 router.get('/products', getProducts);
 router.get('/products/:id', getProductDetail);
 
+router.get('/cart', getCart);
 router.post('/cart', postCart);
 router.post('/delete-cart-item', deleteCartItem);
 

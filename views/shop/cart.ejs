@@ -12,32 +12,28 @@
     <h1>Cart</h1>
     <% if (cart.length === 0) { %>
     <p>Your cart is empty.</p>
-    <% } else { %> <% cart.forEach((cartItem) => { %>
+    <% } else { %> <% let total = 0; %> <% cart.forEach((cartItem) => { %>
     <div class="cart-item">
       <div class="cart-item-details">
-        <p>Id: <%= cartItem.product.id %></p>
-        <p>Title: <%= cartItem.product.title %></p>
+        <p>Id: <%= cartItem.id %></p>
+        <p>Title: <%= cartItem.title %></p>
         <p>
-          Quantity: <%= cartItem.quantity %> * <%= cartItem.product.price %>
+          Quantity: <%= cartItem.CartItem.quantity %> * <%= cartItem.price %>
         </p>
+        <% total += cartItem.CartItem.quantity * cartItem.price %>
       </div>
     </div>
     <form action="/delete-cart-item" method="POST">
-      <input
-        type="hidden"
-        name="productID"
-        value="<%= cartItem.product.id %> "
-      />
-      <input
-        type="hidden"
-        name="productPrice"
-        value="<%= cartItem.product.price %> "
-      />
+      <input type="hidden" name="productID" value="<%= cartItem.id %> " />
+
       <button>Delete</button>
     </form>
     <hr />
     <% }) %>
-    <p>Total Price: <%= totalPrice %></p>
+    <p>Total Price : <%= total %></p>
+    <form action="/orders" method="POST">
+      <button>Order Now</button>
+    </form>
     <% } %>
   </body>
 

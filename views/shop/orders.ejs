@@ -12,6 +12,25 @@
     <%- include('../partials/navigation.ejs' ) %>
     <h1>ORDERS</h1>
 
-    <%- include('../partials/script.ejs') %>
+    <% if (orders.length === 0) { %>
+    <p>You have no orders.</p>
+    <% } else { %> <% orders.forEach((order) => { %>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Order #<%= order.id %></h3>
+      </div>
+      <div class="card-body">
+        <p>Order Date: <%= order.createdAt %></p>
+      </div>
+      <% order.Products.forEach((product) => { %>
+      <ul>
+        <li>Id: <%= product.id %></li>
+        <li>Title: <%= product.title %></li>
+        <li>Quantity: <%= product.OrderItem.quantity %></li>
+      </ul>
+      <% }) %>
+    </div>
+    <% }) %> <% } %> <%- include('../partials/script.ejs') %>
   </body>
 </html>

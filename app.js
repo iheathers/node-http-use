@@ -2,8 +2,10 @@ const express = require('express');
 
 const { User } = require('./models/user');
 const { Cart } = require('./models/cart');
+const { Order } = require('./models/order');
 const { Product } = require('./models/product');
 const { CartItem } = require('./models/cart-item');
+const { OrderItem } = require('./models/order-item');
 
 const userRoutes = require('./routes/shop');
 const { adminRouter } = require('./routes/admin');
@@ -46,8 +48,12 @@ Product.belongsToMany(Cart, { through: CartItem });
 User.hasOne(Cart);
 Cart.belongsTo(User);
 
+User.hasMany(Order);
+Order.belongsTo(User);
+Order.belongsToMany(Product, { through: OrderItem });
+
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     return User.findByPk(1);
   })

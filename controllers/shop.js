@@ -1,6 +1,3 @@
-const { Cart } = require('../models/cart');
-const { Product } = require('../models/product');
-
 const getProducts = async (req, res, next) => {
   try {
     const products = await req.user.getProducts();
@@ -31,11 +28,38 @@ const getProductDetail = async (req, res, next) => {
   });
 };
 
-const getOrders = (req, res, next) => {
+const getOrders = async (req, res, next) => {
+  const orders = await req.user.getOrders({ include: ['Products'] });
+
   res.render('shop/orders', {
     pageTitle: 'Orders',
     path: '/orders',
+    orders: orders,
   });
+};
+
+const postOrder = async (req, res, next) => {
+  console.log('postOrder');
+
+  const cart = await req.user.getCart();
+
+  const products = await cart.getProducts();
+
+  const order = await req.user.createOrder();
+
+  await order.addProducts(
+    products.map((product) => {
+      product.OrderItem = {
+        quantity: product.CartItem.quantity,
+      };
+
+      return product;
+    })
+  );
+
+  cart.setProducts(null);
+
+  res.redirect('/orders');
 };
 
 const getHomePage = (req, res, next) => {
@@ -110,6 +134,7 @@ module.exports = {
   getCart,
   postCart,
   getOrders,
+  postOrder,
   getProducts,
   getHomePage,
   deleteCartItem,

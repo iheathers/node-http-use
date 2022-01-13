@@ -1,10 +1,12 @@
+const { Product } = require("../models/product");
+
 const getProducts = async (req, res, next) => {
   try {
-    const products = await req.user.getProducts();
+    const products = await Product.findAll();
 
-    res.render('shop/product-list', {
-      pageTitle: 'Shop Products',
-      path: '/products',
+    res.render("shop/product-list", {
+      pageTitle: "Shop Products",
+      path: "/products",
       products: products,
     });
   } catch (error) {
@@ -15,32 +17,36 @@ const getProducts = async (req, res, next) => {
 const getProductDetail = async (req, res, next) => {
   const productID = req.params.id;
 
-  const products = await req.user.getProducts({
-    where: {
-      id: productID,
-    },
-  });
+  console.log("params", req.params);
 
-  res.render('shop/product-detail', {
-    pageTitle: 'Product Detail',
-    path: '/products-detail',
-    product: products[0],
-  });
+  console.log({ productID });
+
+  try {
+    const product = await Product.findById(productID);
+
+    if (product) {
+      res.render("shop/product-detail", {
+        pageTitle: "Product Detail",
+        path: "/products-detail",
+        product: product,
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getOrders = async (req, res, next) => {
-  const orders = await req.user.getOrders({ include: ['Products'] });
+  const orders = await req.user.getOrders({ include: ["Products"] });
 
-  res.render('shop/orders', {
-    pageTitle: 'Orders',
-    path: '/orders',
+  res.render("shop/orders", {
+    pageTitle: "Orders",
+    path: "/orders",
     orders: orders,
   });
 };
 
 const postOrder = async (req, res, next) => {
-  console.log('postOrder');
-
   const cart = await req.user.getCart();
 
   const products = await cart.getProducts();
@@ -59,13 +65,13 @@ const postOrder = async (req, res, next) => {
 
   cart.setProducts(null);
 
-  res.redirect('/orders');
+  res.redirect("/orders");
 };
 
 const getHomePage = (req, res, next) => {
-  res.render('shop/index', {
-    pageTitle: 'Digital Shop',
-    path: '/',
+  res.render("shop/index", {
+    pageTitle: "Digital Shop",
+    path: "/",
   });
 };
 
@@ -74,9 +80,9 @@ const getCart = async (req, res, next) => {
 
   const products = await cart.getProducts();
 
-  res.render('shop/cart', {
-    pageTitle: 'Your Cart',
-    path: '/cart',
+  res.render("shop/cart", {
+    pageTitle: "Your Cart",
+    path: "/cart",
     cart: products,
   });
 };
@@ -111,7 +117,7 @@ const postCart = async (req, res, next) => {
     });
   }
 
-  res.redirect('/cart');
+  res.redirect("/cart");
 };
 
 const deleteCartItem = async (req, res, next) => {
@@ -127,7 +133,7 @@ const deleteCartItem = async (req, res, next) => {
 
   await product[0].CartItem.destroy();
 
-  res.redirect('/cart');
+  res.redirect("/cart");
 };
 
 module.exports = {

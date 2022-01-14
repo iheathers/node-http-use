@@ -15,9 +15,6 @@ const mongoConnect = async () => {
   } catch (err) {
     throw err;
   }
-  //   finally {
-  //     await client.close();
-  //   }
 };
 
 const getDb = () => {

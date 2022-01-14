@@ -1,10 +1,10 @@
 const express = require("express");
 
-const { mongoConnect } = require("./utils/database");
-
 const userRoutes = require("./routes/shop");
 const { adminRouter } = require("./routes/admin");
 
+const { User } = require("./models/user");
+const { mongoConnect } = require("./utils/database");
 const { getErrorPage } = require("./controllers/error");
 
 const app = express();
@@ -14,6 +14,19 @@ app.set("views", "views");
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(async (req, res, next) => {
+  try {
+    const user = await User.findByID("61e11edd605994a65bd90170");
+
+    if (user) {
+      req.user = user;
+      next();
+    }
+  } catch (error) {
+    console.log({ error });
+  }
+});
 
 app.use("/admin", adminRouter);
 app.use(userRoutes);

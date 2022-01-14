@@ -17,10 +17,6 @@ const getProducts = async (req, res, next) => {
 const getProductDetail = async (req, res, next) => {
   const productID = req.params.id;
 
-  console.log("params", req.params);
-
-  console.log({ productID });
-
   try {
     const product = await Product.findById(productID);
 
@@ -37,33 +33,19 @@ const getProductDetail = async (req, res, next) => {
 };
 
 const getOrders = async (req, res, next) => {
-  const orders = await req.user.getOrders({ include: ["Products"] });
+  const orderList = await req.user.getOrders();
 
   res.render("shop/orders", {
     pageTitle: "Orders",
     path: "/orders",
-    orders: orders,
+    orders: orderList,
   });
 };
 
 const postOrder = async (req, res, next) => {
-  const cart = await req.user.getCart();
-
-  const products = await cart.getProducts();
-
-  const order = await req.user.createOrder();
-
-  await order.addProducts(
-    products.map((product) => {
-      product.OrderItem = {
-        quantity: product.CartItem.quantity,
-      };
-
-      return product;
-    })
-  );
-
-  cart.setProducts(null);
+  if (req.user.cart.items.length > 0) {
+    await req.user.addOrder();
+  }
 
   res.redirect("/orders");
 };

@@ -49,16 +49,55 @@ class User {
   }
 
   async getCart() {
-    const cartProduct = [];
+    const cartProducts = [];
 
     for (const cartItem of this.cart.items) {
-      cartProduct.push({
-        ...(await Product.findById(cartItem.productId)),
-        quantity: cartItem.quantity,
-      });
+      const product = await Product.findById(cartItem.productId);
+
+      if (product) {
+        cartProducts.push({
+          ...(await Product.findById(cartItem.productId)),
+          quantity: cartItem.quantity,
+        });
+      }
     }
 
-    return cartProduct;
+    return cartProducts;
+  }
+
+  async addOrder() {
+    const db = getDb();
+
+    const cartProducts = await this.getCart();
+
+    const orders = {
+      user: {
+        _id: this._id,
+      },
+      items: cartProducts,
+    };
+
+    await db.collection("orders").insertOne(orders);
+
+    await db.collection("users").updateMany(
+      {},
+      {
+        $set: {
+          "cart.items": [],
+        },
+      }
+    );
+  }
+
+  async getOrders() {
+    const db = getDb();
+
+    const orders = await db
+      .collection("orders")
+      .find({ "user._id": new ObjectId(this._id) })
+      .toArray();
+
+    return orders;
   }
 
   async deleteCartItem(productId) {

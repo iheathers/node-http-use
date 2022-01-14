@@ -1,30 +1,77 @@
-const Sequelize = require('sequelize');
+const { ObjectId } = require("mongodb");
 
-const { sequelize } = require('../utils/database');
+const { getDb } = require("../utils/database");
 
-const Product = sequelize.define('Product', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  price: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  imageURL: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
+class Product {
+  constructor(title, price, description, imageUrl, id) {
+    this.title = title;
+    this.price = price;
+    this.imageURL = imageUrl;
+    this.description = description;
+    this._id = id && new ObjectId(id);
+  }
+
+  async save() {
+    console.log("Saving product...");
+
+    const db = getDb();
+
+    if (!this._id) {
+      return await db.collection("products").insertOne(this);
+    }
+
+    return await this.update(this._id);
+  }
+
+  static async findAll() {
+    const db = getDb();
+    const products = await db.collection("products").find().toArray();
+
+    return products;
+  }
+
+  static async findById(productID) {
+    const db = getDb();
+
+    try {
+      const product = await db
+        .collection("products")
+        .findOne({ _id: new ObjectId(productID) });
+
+      return product;
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  async update(productID) {
+    const db = getDb();
+
+    try {
+      await db.collection("products").updateOne(
+        {
+          _id: new ObjectId(productID),
+        },
+        {
+          $set: this,
+        }
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  static async delete(productID) {
+    const db = getDb();
+
+    try {
+      await db.collection("products").deleteOne({
+        _id: new ObjectId(productID),
+      });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+}
 
 module.exports = { Product };

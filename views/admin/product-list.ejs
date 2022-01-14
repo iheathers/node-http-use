@@ -16,7 +16,7 @@
 
       <div class="grid">
         <% products.forEach((product) => { %> <%-
-        include('../partials/admin-card.ejs', {id: product.id, title:
+        include('../partials/admin-card.ejs', {id: product._id, title:
         product.title, price: product.price, description: product.description,
         imageURL: product.imageURL }) %> <% }) %>
       </div>

@@ -3,18 +3,24 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../utils/database");
 
 class Product {
-  constructor(title, price, description, imageUrl) {
+  constructor(title, price, description, imageUrl, id) {
     this.title = title;
     this.price = price;
     this.imageURL = imageUrl;
     this.description = description;
+    this._id = id && new ObjectId(id);
   }
 
   async save() {
     console.log("Saving product...");
 
     const db = getDb();
-    await db.collection("products").insertOne(this);
+
+    if (!this._id) {
+      return await db.collection("products").insertOne(this);
+    }
+
+    return await this.update(this._id);
   }
 
   static async findAll() {
@@ -32,9 +38,36 @@ class Product {
         .collection("products")
         .findOne({ _id: new ObjectId(productID) });
 
-      console.log("findByID", { product });
-
       return product;
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  async update(productID) {
+    const db = getDb();
+
+    try {
+      await db.collection("products").updateOne(
+        {
+          _id: new ObjectId(productID),
+        },
+        {
+          $set: this,
+        }
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  static async delete(productID) {
+    const db = getDb();
+
+    try {
+      await db.collection("products").deleteOne({
+        _id: new ObjectId(productID),
+      });
     } catch (error) {
       console.log({ error });
     }

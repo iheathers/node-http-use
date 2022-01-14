@@ -20,7 +20,7 @@ app.use(async (req, res, next) => {
     const user = await User.findByID("61e11edd605994a65bd90170");
 
     if (user) {
-      req.user = user;
+      req.user = new User(user.username, user.emailID, user.cart, user._id);
       next();
     }
   } catch (error) {

@@ -26,7 +26,14 @@ const getAddProduct = (req, res, next) => {
 const postAddProduct = async (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
 
-  const product = new Product(title, price, description, imageURL);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageURL,
+    null,
+    req.user._id
+  );
 
   await product.save();
 

@@ -21,13 +21,13 @@
         <h3>Order #<%= order.id %></h3>
       </div>
       <div class="card-body">
-        <p>Order Date: <%= order.createdAt %></p>
+        <!-- <p>Order Date: <%= order.createdAt %></p> -->
       </div>
-      <% order.Products.forEach((product) => { %>
+      <% order.items.forEach((product) => { %>
       <ul>
-        <li>Id: <%= product.id %></li>
+        <li>Id: <%= product._id %></li>
         <li>Title: <%= product.title %></li>
-        <li>Quantity: <%= product.OrderItem.quantity %></li>
+        <li>Quantity: <%= product.quantity %></li>
       </ul>
       <% }) %>
     </div>

@@ -15,14 +15,14 @@
     <% } else { %> <% let total = 0; %> <% cart.forEach((cartItem) => { %>
     <div class="cart-item">
       <div class="cart-item-details">
-        <p>Id: <%= cartItem._id %></p>
+        <p>Id: <%= cartItem.id %></p>
         <p>Title: <%= cartItem.title %></p>
         <p>Quantity: <%= cartItem.quantity %> * <%= cartItem.price %></p>
         <% total += cartItem.quantity * cartItem.price %>
       </div>
     </div>
     <form action="/delete-cart-item" method="POST">
-      <input type="hidden" name="productID" value="<%= cartItem._id %> " />
+      <input type="hidden" name="productID" value="<%= cartItem.id %> " />
 
       <button>Delete</button>
     </form>

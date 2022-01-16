@@ -3,7 +3,7 @@ const { Product } = require("../models/product");
 
 const getProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.find();
 
     res.render("admin/product-list", {
       pageTitle: "Admin Products",
@@ -26,16 +26,18 @@ const getAddProduct = (req, res, next) => {
 const postAddProduct = async (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
 
-  const product = new Product(
+  const product = new Product({
     title,
     price,
-    description,
     imageURL,
-    null,
-    req.user._id
-  );
+    description,
+  });
 
-  await product.save();
+  try {
+    await product.save();
+  } catch (error) {
+    console.log("postAddProduct", { error });
+  }
 
   res.redirect(301, "/products");
 };
@@ -67,16 +69,16 @@ const postEditProduct = async (req, res, next) => {
   const { id, title, price, description, imageURL } = req.body;
   const productID = id.trim();
 
-  const editedProduct = new Product(
-    title,
-    price,
-    description,
-    imageURL,
-    productID
-  );
-
   try {
-    await editedProduct.save(productID);
+    await Product.updateOne(
+      { _id: productID },
+      {
+        title,
+        price,
+        description,
+        imageURL,
+      }
+    );
   } catch (error) {
     console.log({ error });
   }
@@ -87,7 +89,11 @@ const postEditProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
   const productID = req.params.productID;
 
-  await Product.delete(productID);
+  try {
+    await Product.findByIdAndRemove(productID);
+  } catch (error) {
+    console.log("deleteProduct", { error });
+  }
 
   res.redirect(301, "/products");
 };

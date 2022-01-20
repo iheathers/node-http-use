@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const userRoutes = require("./routes/shop");
+const { authRouter } = require("./routes/auth");
 const { adminRouter } = require("./routes/admin");
 
 const { User } = require("./models/user");
@@ -11,13 +14,32 @@ const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+const MONGODB_URI =
+  "mongodb+srv://heathids:heathids@cluster0.nyqib.mongodb.net/myDigitalShop?retryWrites=true&w=majority";
+
+const mongodbStore = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    store: mongodbStore,
+  })
+);
 
 app.use(async (req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+
   try {
-    const user = await User.findById("61e2f62c8f03781acd2c1a01");
+    const user = await User.findById(req.session.user._id);
 
     if (user) {
       req.user = user;
@@ -30,16 +52,14 @@ app.use(async (req, res, next) => {
 
 app.use("/admin", adminRouter);
 app.use(userRoutes);
+app.use(authRouter);
 
 app.use(getErrorPage);
-
-const uri =
-  "mongodb+srv://heathids:heathids@cluster0.nyqib.mongodb.net/myDigitalShop?retryWrites=true&w=majority";
 
 mongoose.set("debug", true);
 const main = async () => {
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(MONGODB_URI);
   } catch (error) {
     console.log("mongoose connect", { error });
   }

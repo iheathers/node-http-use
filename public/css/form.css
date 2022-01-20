@@ -5,6 +5,12 @@
   display: block;
 }
 
+.login-form {
+  width: 20rem;
+  margin: auto;
+  display: block;
+}
+
 .product-item {
   width: 20rem;
   max-width: 95%;

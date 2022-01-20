@@ -1,4 +1,3 @@
-const { Db } = require("mongodb");
 const { Product } = require("../models/product");
 
 const getProducts = async (req, res, next) => {
@@ -9,6 +8,7 @@ const getProducts = async (req, res, next) => {
       pageTitle: "Admin Products",
       path: "/admin/product-list",
       products: products,
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log({ error });
@@ -20,6 +20,7 @@ const getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -62,6 +63,7 @@ const getEditProduct = async (req, res, next) => {
     path: "/admin/edit-product",
     product: product,
     editing: editMode,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 

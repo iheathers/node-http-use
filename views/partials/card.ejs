@@ -18,6 +18,12 @@
     <% if (isAuthenticated) { %>
     <form action="/cart" method="post">
       <button class="btn">Add to Cart</button>
+      <input
+        type="text"
+        name="_csrf"
+        value="<%= csrfToken %>"
+        style="width: 325px"
+      />
       <input type="hidden" name="productID" value="<%= id %> " />
     </form>
     <% } %>

@@ -3,11 +3,11 @@ const { Schema, model } = require("mongoose");
 const { Product } = require("./product");
 
 const userSchema = new Schema({
-  username: {
+  email: {
     type: String,
     required: true,
   },
-  email: {
+  password: {
     type: String,
     required: true,
   },

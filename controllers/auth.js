@@ -6,6 +6,7 @@ const getLogin = (req, res, next) => {
   res.render("auth/login", {
     pageTitle: "Login",
     path: "/login",
+    errorMsg: req.flash("loginCredentialError")[0],
   });
 };
 
@@ -13,7 +14,7 @@ const getSignUp = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "SignUp",
     path: "/signup",
-    isAuthenticated: req.session.isLoggedIn,
+    errorMsg: req.flash("signUpError")[0],
   });
 };
 
@@ -25,6 +26,7 @@ const postSignUp = async (req, res, next) => {
   const existingUser = await User.findOne({ email: email });
 
   if (existingUser) {
+    req.flash("signUpError", "User exists");
     return res.redirect("/signup");
   }
 
@@ -55,6 +57,7 @@ const postLogin = async (req, res, next) => {
       );
 
       if (!passwordMatch) {
+        req.flash("loginCredentialError", "Incorrect User or Password");
         return res.redirect("/login");
       }
 
@@ -69,6 +72,7 @@ const postLogin = async (req, res, next) => {
     console.log("postLogin", { error });
   }
 
+  req.flash("loginCredentialError", "User does not exist");
   res.redirect("/login");
 };
 

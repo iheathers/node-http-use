@@ -40,6 +40,11 @@
           style="width: 325px"
         />
       </form>
+      <% if (errorMsg) { %>
+      <div style="color: red; text-align: center; background-color: silver">
+        <%= errorMsg %>
+      </div>
+      <% } %>
     </main>
 
     <%- include('../partials/script.ejs') %>

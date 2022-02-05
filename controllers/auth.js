@@ -1,4 +1,15 @@
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const sgTransport = require("nodemailer-sendgrid-transport");
+
+const options = {
+  auth: {
+    api_key:
+      "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",
+  },
+};
+
+const sendgridClient = nodemailer.createTransport(sgTransport(options));
 
 const { User } = require("../models/user");
 
@@ -39,6 +50,19 @@ const postSignUp = async (req, res, next) => {
   });
 
   await newUser.save();
+
+  try {
+    const response = await sendgridClient.sendMail({
+      from: "dexter1@athohn.site",
+      to: email,
+      subject: "Test",
+      text: "Hello World",
+      html: "Hello World",
+    });
+    console.log("sendmail", { response });
+  } catch (error) {
+    console.log("sendmail", { error });
+  }
 
   res.redirect("/login");
 };

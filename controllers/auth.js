@@ -1,15 +1,9 @@
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
-const sgTransport = require("nodemailer-sendgrid-transport");
+const sgMail = require("@sendgrid/mail");
 
-const options = {
-  auth: {
-    api_key:
-      "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",
-  },
-};
+console.log("APIkEY", process.env.SENDGRID_API_KEY);
 
-const sendgridClient = nodemailer.createTransport(sgTransport(options));
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { User } = require("../models/user");
 
@@ -51,18 +45,22 @@ const postSignUp = async (req, res, next) => {
 
   await newUser.save();
 
-  try {
-    const response = await sendgridClient.sendMail({
-      from: "dexter1@athohn.site",
-      to: email,
-      subject: "Test",
-      text: "Hello World",
-      html: "Hello World",
+  const msg = {
+    to: email,
+    from: "dexter1@athohn.site", // Change to your verified sender
+    subject: "Sending with SendGrid is Fun",
+    text: "and easy to do anywhere, even with Node.js",
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
     });
-    console.log("sendmail", { response });
-  } catch (error) {
-    console.log("sendmail", { error });
-  }
 
   res.redirect("/login");
 };

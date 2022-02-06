@@ -1,3 +1,4 @@
+require("dotenv").config();
 const csrf = require("csurf");
 const express = require("express");
 const mongoose = require("mongoose");

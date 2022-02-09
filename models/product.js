@@ -17,6 +17,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  userID: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 const Product = model("Product", productSchema);

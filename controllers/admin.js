@@ -3,6 +3,7 @@ const { Product } = require("../models/product");
 const getProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
+    // const products = await Product.find({ userID: req.user._id });
 
     res.render("admin/product-list", {
       pageTitle: "Admin Products",
@@ -27,11 +28,14 @@ const getAddProduct = (req, res, next) => {
 const postAddProduct = async (req, res, next) => {
   const { title, price, description, imageURL } = req.body;
 
+  const userID = req.user._id;
+
   const product = new Product({
     title,
     price,
     imageURL,
     description,
+    userID,
   });
 
   try {
@@ -56,6 +60,12 @@ const getEditProduct = async (req, res, next) => {
 
   if (!product) {
     res.redirect(301, "/products");
+  }
+
+  if (product.userID.toString() !== req.user._id.toString()) {
+    console.log("Unauthorized user");
+
+    return res.redirect("/");
   }
 
   res.render("admin/edit-product", {
@@ -92,7 +102,15 @@ const deleteProduct = async (req, res, next) => {
   const productID = req.params.productID;
 
   try {
-    await Product.findByIdAndRemove(productID);
+    const { deletedCount } = await Product.deleteOne({
+      _id: productID,
+      userID: req.user._id,
+    });
+
+    if (!deletedCount) {
+      console.log({ deletedCount });
+      console.log("Unauthorized user");
+    }
   } catch (error) {
     console.log("deleteProduct", { error });
   }

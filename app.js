@@ -1,3 +1,4 @@
+require("dotenv").config();
 const csrf = require("csurf");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -17,8 +18,7 @@ const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
-const MONGODB_URI =
-  "mongodb+srv://heathids:heathids@cluster0.nyqib.mongodb.net/myDigitalShop?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const mongodbStore = new MongoDBStore({
   uri: MONGODB_URI,
@@ -29,7 +29,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: mongodbStore,

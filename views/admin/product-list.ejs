@@ -18,7 +18,7 @@
         <% products.forEach((product) => { %> <%-
         include('../partials/admin-card.ejs', {id: product._id, title:
         product.title, price: product.price, description: product.description,
-        imageURL: product.imageURL }) %> <% }) %>
+        imageURL: product.imageURL, userID: product.userID }) %> <% }) %>
       </div>
       <%} else { %>
       <p>No Products</p>

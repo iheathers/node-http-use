@@ -1,4 +1,10 @@
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const sgMail = require("@sendgrid/mail");
+
+console.log("APIkEY", process.env.SENDGRID_API_KEY);
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { User } = require("../models/user");
 
@@ -6,7 +12,7 @@ const getLogin = (req, res, next) => {
   res.render("auth/login", {
     pageTitle: "Login",
     path: "/login",
-    errorMsg: req.flash("loginCredentialError")[0],
+    errorMsg: req.flash("error")[0],
   });
 };
 
@@ -14,7 +20,7 @@ const getSignUp = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "SignUp",
     path: "/signup",
-    errorMsg: req.flash("signUpError")[0],
+    errorMsg: req.flash("error")[0],
   });
 };
 
@@ -26,7 +32,7 @@ const postSignUp = async (req, res, next) => {
   const existingUser = await User.findOne({ email: email });
 
   if (existingUser) {
-    req.flash("signUpError", "User exists");
+    req.flash("error", "User exists");
     return res.redirect("/signup");
   }
 
@@ -39,6 +45,23 @@ const postSignUp = async (req, res, next) => {
   });
 
   await newUser.save();
+
+  const msg = {
+    to: email,
+    from: "dexter1@athohn.site", // Change to your verified sender
+    subject: "Sending with SendGrid is Fun",
+    text: "and easy to do anywhere, even with Node.js",
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   res.redirect("/login");
 };
@@ -57,7 +80,7 @@ const postLogin = async (req, res, next) => {
       );
 
       if (!passwordMatch) {
-        req.flash("loginCredentialError", "Incorrect User or Password");
+        req.flash("error", "Incorrect User or Password");
         return res.redirect("/login");
       }
 
@@ -72,7 +95,7 @@ const postLogin = async (req, res, next) => {
     console.log("postLogin", { error });
   }
 
-  req.flash("loginCredentialError", "User does not exist");
+  req.flash("error", "User does not exist");
   res.redirect("/login");
 };
 
@@ -84,4 +107,101 @@ const postLogout = (req, res, next) => {
   });
 };
 
-module.exports = { getLogin, postLogin, postLogout, getSignUp, postSignUp };
+const getReset = (req, res, next) => {
+  res.render("auth/reset", {
+    pageTitle: "SignUp",
+    path: "/reset",
+    errorMsg: req.flash("error")[0],
+  });
+};
+
+const postReset = async (req, res, next) => {
+  const email = req.body.email;
+
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    req.flash("error", "User does not exist");
+    return res.redirect("/reset");
+  }
+
+  user.resetExpiration = Date.now() + 3600000;
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  user.resetToken = resetToken;
+
+  await user.save();
+
+  const msg = {
+    to: email,
+    from: "dexter1@athohn.site", // Change to your verified sender
+    subject: "Reset Password",
+    text: "Reset Password",
+    html: `
+	Click <a href="http://localhost:3000/reset/${resetToken}">here<a/> to reset password.
+	`,
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  res.redirect("/login");
+};
+
+const getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+
+  res.render("auth/new-password", {
+    pageTitle: "New Password",
+    path: "/new-password",
+    token: token,
+    errorMsg: req.flash("error")[0],
+  });
+};
+
+const postNewPassword = async (req, res, next) => {
+  const token = req.body.token;
+  const oldPassword = req.body.oldPassword;
+  const password = req.body.password;
+
+  const user = await User.findOne({
+    resetToken: token,
+    resetExpiration: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    req.flash("error", "Invalid token / Token expired ");
+    return res.redirect(`/reset/${token}`);
+  }
+
+  const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+
+  if (!passwordMatch) {
+    req.flash("error", "Incorrect Old password");
+    return res.redirect(`/reset/${token}`);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+  user.password = hashedPassword;
+
+  await user.save();
+
+  res.redirect("/login");
+};
+
+module.exports = {
+  getLogin,
+  getReset,
+  postLogin,
+  getSignUp,
+  postReset,
+  postLogout,
+  postSignUp,
+  getNewPassword,
+  postNewPassword,
+};

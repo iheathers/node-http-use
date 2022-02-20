@@ -12,7 +12,10 @@ const getProducts = async (req, res, next) => {
       //   isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
-    console.log({ error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 };
 
@@ -31,7 +34,10 @@ const getProductDetail = async (req, res, next) => {
       });
     }
   } catch (error) {
-    throw error;
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 };
 
@@ -102,7 +108,10 @@ const postCart = async (req, res, next) => {
 
     await req.user.addToCart(product);
   } catch (error) {
-    console.log("postCart", { error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 
   res.redirect("/cart");

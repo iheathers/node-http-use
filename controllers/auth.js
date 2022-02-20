@@ -57,7 +57,10 @@ const postSignUp = async (req, res, next) => {
       console.log("Email sent");
     })
     .catch((error) => {
-      console.error(error);
+      const errObj = new Error(error);
+      errObj.httpStatusCode = 500;
+
+      return next(errObj);
     });
 
   res.redirect("/login");
@@ -89,7 +92,10 @@ const postLogin = async (req, res, next) => {
       return res.redirect("/products");
     }
   } catch (error) {
-    console.log("postLogin", { error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 
   req.flash("error", "User does not exist");
@@ -144,7 +150,10 @@ const postReset = async (req, res, next) => {
       console.log("Email sent");
     })
     .catch((error) => {
-      console.error(error);
+      const errObj = new Error(error);
+      errObj.httpStatusCode = 500;
+
+      return next(errObj);
     });
 
   res.redirect("/login");

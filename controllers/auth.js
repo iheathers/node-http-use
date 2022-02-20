@@ -1,8 +1,7 @@
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const sgMail = require("@sendgrid/mail");
-
-console.log("APIkEY", process.env.SENDGRID_API_KEY);
+const { validationResult } = require("express-validator");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -25,16 +24,14 @@ const getSignUp = (req, res, next) => {
 };
 
 const postSignUp = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-
-  const existingUser = await User.findOne({ email: email });
-
-  if (existingUser) {
-    req.flash("error", "User exists");
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash("error", errors.errors[0].msg);
     return res.redirect("/signup");
   }
+
+  const email = req.body.email;
+  const password = req.body.password;
 
   const hashedPassword = await bcrypt.hash(password, 12);
 

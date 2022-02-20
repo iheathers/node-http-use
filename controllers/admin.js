@@ -12,7 +12,10 @@ const getProducts = async (req, res, next) => {
       isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
-    console.log({ error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 };
 
@@ -40,8 +43,12 @@ const postAddProduct = async (req, res, next) => {
 
   try {
     await product.save();
+    // throw new Error("Simulation error");
   } catch (error) {
-    console.log("postAddProduct", { error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 
   res.redirect(301, "/products");
@@ -92,7 +99,10 @@ const postEditProduct = async (req, res, next) => {
       }
     );
   } catch (error) {
-    console.log({ error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 
   res.redirect(301, "/products");
@@ -112,7 +122,10 @@ const deleteProduct = async (req, res, next) => {
       console.log("Unauthorized user");
     }
   } catch (error) {
-    console.log("deleteProduct", { error });
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+
+    return next(errObj);
   }
 
   res.redirect(301, "/products");

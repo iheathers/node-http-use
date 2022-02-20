@@ -11,7 +11,7 @@ const { authRouter } = require("./routes/auth");
 const { adminRouter } = require("./routes/admin");
 
 const { User } = require("./models/user");
-const { getErrorPage } = require("./controllers/error");
+const { getErrorPage, get500ErrorPage } = require("./controllers/error");
 
 const app = express();
 const csrfProtection = csrf();
@@ -38,6 +38,12 @@ app.use(
 app.use(csrfProtection);
 app.use(flash());
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 app.use(async (req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -46,26 +52,36 @@ app.use(async (req, res, next) => {
   try {
     const user = await User.findById(req.session.user._id);
 
-    if (user) {
-      req.user = user;
+    // throw new Error("simulation user fail");
+
+    if (!user) {
       next();
     }
-  } catch (error) {
-    console.log({ error });
-  }
-});
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
+    req.user = user;
+    next();
+  } catch (error) {
+    const errObj = new Error(error);
+    errObj.httpStatusCode = 500;
+    return next(errObj);
+  }
 });
 
 app.use("/admin", adminRouter);
 app.use(userRoutes);
 app.use(authRouter);
 
+app.use("/500", get500ErrorPage);
+
 app.use(getErrorPage);
+
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error 500",
+    path: "/",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+});
 
 mongoose.set("debug", true);
 const main = async () => {

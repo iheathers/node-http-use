@@ -6,4 +6,12 @@ const getErrorPage = (req, res, next) => {
   });
 };
 
-module.exports = { getErrorPage };
+const get500ErrorPage = (req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error 500",
+    path: "/",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+};
+
+module.exports = { getErrorPage, get500ErrorPage };

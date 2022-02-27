@@ -29,7 +29,10 @@ const getAddProduct = (req, res, next) => {
 };
 
 const postAddProduct = async (req, res, next) => {
-  const { title, price, description, imageURL } = req.body;
+  const { title, price, description } = req.body;
+  const image = req.file;
+
+  const imageURL = image?.path;
 
   const userID = req.user._id;
 
@@ -85,7 +88,9 @@ const getEditProduct = async (req, res, next) => {
 };
 
 const postEditProduct = async (req, res, next) => {
-  const { id, title, price, description, imageURL } = req.body;
+  const { id, title, price, description } = req.body;
+  const image = req.file;
+
   const productID = id.trim();
 
   try {
@@ -95,9 +100,17 @@ const postEditProduct = async (req, res, next) => {
         title,
         price,
         description,
-        imageURL,
       }
     );
+
+    if (image) {
+      await Product.updateOne(
+        { _id: productID },
+        {
+          imageURL: image.path,
+        }
+      );
+    }
   } catch (error) {
     const errObj = new Error(error);
     errObj.httpStatusCode = 500;

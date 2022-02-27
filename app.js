@@ -1,5 +1,6 @@
 require("dotenv").config();
 const csrf = require("csurf");
+const multer = require("multer");
 const express = require("express");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
@@ -13,6 +14,31 @@ const { adminRouter } = require("./routes/admin");
 const { User } = require("./models/user");
 const { getErrorPage, get500ErrorPage } = require("./controllers/error");
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    return cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const uploadMiddleware = multer({
+  storage: fileStorage,
+  fileFilter: fileFilter,
+}).single("image");
 const app = express();
 const csrfProtection = csrf();
 
@@ -26,7 +52,9 @@ const mongodbStore = new MongoDBStore({
 });
 
 app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
+app.use(uploadMiddleware);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -76,10 +104,12 @@ app.use("/500", get500ErrorPage);
 app.use(getErrorPage);
 
 app.use((error, req, res, next) => {
+  console.log({ error });
+
   res.status(500).render("500", {
     pageTitle: "Error 500",
     path: "/",
-    isAuthenticated: req.session.isLoggedIn,
+    isAuthenticated: req.session?.isLoggedIn,
   });
 });
 

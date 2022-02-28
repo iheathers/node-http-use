@@ -20,7 +20,7 @@ adminRouter.post("/add-product", isAuth, postAddProduct);
 adminRouter.get("/edit-product/:productID", isAuth, getEditProduct);
 adminRouter.post("/edit-product", isAuth, postEditProduct);
 
-adminRouter.post("/delete-product/:productID", isAuth, deleteProduct);
+adminRouter.delete("/product-list/:productID", isAuth, deleteProduct);
 
 module.exports = {
   adminRouter,

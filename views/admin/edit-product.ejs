@@ -13,7 +13,7 @@
     <%- include('../partials/navigation.ejs') %>
 
     <main>
-      <form class="product-form" action=<%= editing ? "/admin/edit-product" : "/admin/add-product" %> method="POST">
+      <form class="product-form" action=<%= editing ? "/admin/edit-product" : "/admin/add-product" %> method="POST" enctype='multipart/form-data'>
         <input type="hidden" name="id" value="<%= editing ? product._id : '' %> ">
 		<input
           type="text"
@@ -33,9 +33,9 @@
         <div class="form-control">
           <label for="imageURL">ImageURL</label>
           <input
-            type="text"
-            name="imageURL"
-            id="imageURL"
+            type="file"
+            name="image"
+            id="image"
             value="<%= editing ? product.imageURL : '' %>"
           />
         </div>

@@ -1,3 +1,7 @@
+const fs = require("fs");
+const path = require("path");
+const PDFDocument = require("pdfkit");
+
 const { Order } = require("../models/order");
 const { Product } = require("../models/product");
 
@@ -125,11 +129,54 @@ const deleteCartItem = async (req, res, next) => {
   res.redirect("/cart");
 };
 
+const getInvoice = async (req, res, next) => {
+  const orderId = req.params.orderId;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return next(new Error("Invalid order"));
+    }
+
+    if (order.user.userId.toString() !== req.user._id.toString()) {
+      return next(new Error("Unauthorized operation"));
+    }
+
+    const invoiceName = `invoice_${orderId}.pdf`;
+    const invoicePath = path.join("data", "invoices", invoiceName);
+
+    const doc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "inline");
+    doc.pipe(fs.createWriteStream(invoicePath));
+    doc.pipe(res);
+
+    doc.fontSize(50).text("Invoice");
+    doc.text("-----------");
+
+    order.items.forEach((item) => {
+      doc
+        .fontSize(20)
+        .text(`PrdouctID-${item.product.productId} - ${item.quantity}`);
+    });
+    doc.end();
+
+    // const file = fs.createReadStream(invoicePath);
+    // res.setHeader("Content-Type", "application/pdf");
+    // res.setHeader("Content-Disposition", "inline");
+    // file.pipe(res);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   getCart,
   postCart,
   getOrders,
   postOrder,
+  getInvoice,
   getProducts,
   getHomePage,
   deleteCartItem,

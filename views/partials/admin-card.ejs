@@ -14,14 +14,15 @@
     <button class="btn">
       <a href="/admin/edit-product/<%= id %>/?edit=true">Edit</a>
     </button>
-    <form action="/admin/delete-product/<%= id %> " method="POST">
-      <input
-        type="text"
-        name="_csrf"
-        value="<%= csrfToken %>"
-        style="width: 325px"
-      />
-      <button class="btn" type="submit">Delete</button>
-    </form>
+    <input
+      type="text"
+      name="_csrf"
+      value="<%= csrfToken %>"
+      style="width: 325px"
+    />
+    <input type="text" name="productId" value="<%= id %>" />
+    <button class="btn" type="button" onclick="deleteProduct(this)">
+      Delete
+    </button>
   </div>
 </article>

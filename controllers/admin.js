@@ -133,15 +133,14 @@ const deleteProduct = async (req, res, next) => {
     if (!deletedCount) {
       console.log({ deletedCount });
       console.log("Unauthorized user");
+      res.status(402).json({ message: "Unauthorized operation" });
     }
   } catch (error) {
     const errObj = new Error(error);
-    errObj.httpStatusCode = 500;
-
-    return next(errObj);
+    res.status(500).json({ message: "Server error" });
   }
 
-  res.redirect(301, "/products");
+  res.status(200).json({ message: "Success" });
 };
 
 module.exports = {

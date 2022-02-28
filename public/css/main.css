@@ -160,3 +160,22 @@ form {
 .hide {
   display: none !important;
 }
+
+.pagination {
+  text-align: center;
+  color: #00695c;
+  margin: 50px;
+}
+
+.pagination a {
+  text-decoration: none;
+  border: 1px solid green;
+  padding: 5px;
+  margin: 5px;
+}
+
+.pagination a:hover,
+.pagination a:active {
+  background-color: green;
+  color: white;
+}

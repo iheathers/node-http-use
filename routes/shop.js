@@ -5,6 +5,7 @@ const {
   postCart,
   postOrder,
   getOrders,
+  getInvoice,
   getProducts,
   getHomePage,
   deleteCartItem,
@@ -26,5 +27,7 @@ router.get("/products/:id", getProductDetail);
 router.get("/cart", isAuth, getCart);
 router.post("/cart", isAuth, postCart);
 router.post("/delete-cart-item", isAuth, deleteCartItem);
+
+router.get("/orders/:orderId", isAuth, getInvoice);
 
 module.exports = router;

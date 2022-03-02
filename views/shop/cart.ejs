@@ -35,15 +35,20 @@
     <hr />
     <% }) %>
     <p>Total Price : <%= total %></p>
-    <form action="/orders" method="POST">
+    <!-- <form action="/orders" method="POST"> -->
+    <!-- <button>
+			<a href="/checkout">Checkout</a>
+		</button> -->
+    <form action="/checkout" method="POST">
       <input
         type="text"
         name="_csrf"
         value="<%= csrfToken %>"
         style="width: 325px"
       />
-      <button>Order Now</button>
+      <button type="submit" id="checkout-button">Checkout</button>
     </form>
+    <!-- </form> -->
     <% } %>
   </body>
 

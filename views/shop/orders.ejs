@@ -26,8 +26,8 @@
       <div class="card-body"></div>
       <% order.items.forEach((item) => { %>
       <ul>
-        <li>Id: <%= item.product.productId._id %></li>
-        <li>Title: <%= item.product.productId.title %></li>
+        <li>Id: <%= item.product.productId?._id %></li>
+        <li>Title: <%= item.product.productId?.title %></li>
         <li>Quantity: <%= item.quantity %></li>
       </ul>
       <% }) %>

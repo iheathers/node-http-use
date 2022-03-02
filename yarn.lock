@@ -116,7 +116,7 @@
   "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.15.tgz"
   "version" "17.0.15"
 
-"@types/node@^16.11.7":
+"@types/node@^16.11.7", "@types/node@>=8.1.0":
   "integrity" "sha512-DYNtJWauMQ9RNpesl4aVothr97/tIJM8HbyOXJ0AYT1Z2bEjLHyfjOBPAQQVMLf8h3kSShYfNk8Wnto8B2zHUA=="
   "resolved" "https://registry.npmjs.org/@types/node/-/node-16.11.22.tgz"
   "version" "16.11.22"
@@ -2793,15 +2793,15 @@
   dependencies:
     "escape-goat" "^2.0.0"
 
+"qs@^6.6.0", "qs@6.9.6":
+  "integrity" "sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ=="
+  "resolved" "https://registry.npmjs.org/qs/-/qs-6.9.6.tgz"
+  "version" "6.9.6"
+
 "qs@~6.5.2":
   "integrity" "sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA=="
   "resolved" "https://registry.npmjs.org/qs/-/qs-6.5.3.tgz"
   "version" "6.5.3"
-
-"qs@6.9.6":
-  "integrity" "sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ=="
-  "resolved" "https://registry.npmjs.org/qs/-/qs-6.9.6.tgz"
-  "version" "6.9.6"
 
 "quote-stream@^1.0.1":
   "integrity" "sha1-hJY/jJwmuULhU/7rU6rnRlK34LI="
@@ -3359,6 +3359,14 @@
   "integrity" "sha1-PFMZQukIwml8DsNEhYwobHygpgo="
   "resolved" "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz"
   "version" "2.0.1"
+
+"stripe@^8.207.0":
+  "integrity" "sha512-ZCjdqN2adGfrC5uAAo0v7IquzaiQ3+pDzB324/iV3Q3Deiot9VO7KMVSNVx/0i6E6ywhgV33ko3FMT7iUgxKYA=="
+  "resolved" "https://registry.npmjs.org/stripe/-/stripe-8.207.0.tgz"
+  "version" "8.207.0"
+  dependencies:
+    "@types/node" ">=8.1.0"
+    "qs" "^6.6.0"
 
 "supports-color@^2.0.0":
   "integrity" "sha1-U10EXOa2Nj+kARcIRimZXp3zJMc="

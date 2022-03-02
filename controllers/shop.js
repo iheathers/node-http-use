@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const PDFDocument = require("pdfkit");
 
 const { Order } = require("../models/order");
@@ -75,7 +76,7 @@ const getOrders = async (req, res, next) => {
   });
 };
 
-const postOrder = async (req, res, next) => {
+const getCheckoutSuccess = async (req, res, next) => {
   const cart = await req.user.getCart();
 
   const items = cart.map((item) => {
@@ -144,6 +145,46 @@ const deleteCartItem = async (req, res, next) => {
   res.redirect("/cart");
 };
 
+const getCheckout = async (req, res, next) => {
+  const cart = await req.user.getCart();
+
+  res.render("shop/checkout", {
+    pageTitle: "Checkout",
+    path: "/checkout",
+    cart: cart,
+  });
+};
+
+const postCheckout = async (req, res, next) => {
+  console.log({ stripe });
+
+  const cart = await req.user.getCart();
+
+  const line_items_list = cart.map((item) => {
+    return {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.title,
+        },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    };
+  });
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: line_items_list,
+    mode: "payment",
+    success_url: `${req.protocol}://${req.hostname}:3000/checkout/success`,
+    cancel_url: `${req.protocol}://${req.hostname}:3000/checkout/cancel`,
+  });
+
+  //   console.log({ session });
+
+  res.redirect(session.url);
+};
+
 const getInvoice = async (req, res, next) => {
   const orderId = req.params.orderId;
 
@@ -190,10 +231,13 @@ module.exports = {
   getCart,
   postCart,
   getOrders,
-  postOrder,
+  //   postOrder,
   getInvoice,
+  getCheckout,
   getProducts,
   getHomePage,
+  postCheckout,
   deleteCartItem,
   getProductDetail,
+  getCheckoutSuccess,
 };

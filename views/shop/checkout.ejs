@@ -11,8 +11,34 @@
   <body>
     <%- include('../partials/navigation.ejs') %>
 
-    <h1>Checkout</h1>
+    <h1 style="padding-top: 100px">Checkout</h1>
 
-    <%- include('../partials/script.ejs') %>
+    <% if (cart.length === 0) { %>
+    <p>Your cart is empty.</p>
+    <% } else { %> <% let total = 0; %> <% cart.forEach((cartItem) => { %>
+    <div class="cart-item">
+      <div class="cart-item-details">
+        <p>Id: <%= cartItem.id %></p>
+        <p>Title: <%= cartItem.title %></p>
+        <p>Quantity: <%= cartItem.quantity %> * <%= cartItem.price %></p>
+        <% total += cartItem.quantity * cartItem.price %>
+      </div>
+    </div>
+
+    <hr />
+    <% }) %>
+    <p>Total Price : <%= total %></p>
+    <!-- <form action="/orders" method="POST"> -->
+    <input
+      type="text"
+      name="_csrf"
+      value="<%= csrfToken %>"
+      style="width: 325px"
+    />
+    <button>
+      <a href="/orders">Order Now</a>
+    </button>
+    <!-- </form> -->
+    <% } %> <%- include('../partials/script.ejs') %>
   </body>
 </html>
